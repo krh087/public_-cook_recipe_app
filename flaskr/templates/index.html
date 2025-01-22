@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>{{ current_user.username }}さん　こんにちは</h2>
+<a href="{{ url_for('add_recipe') }}" role="button">新規レシピ作成</a>
+<div class="container mt-4">
+    <h2>従業員一覧</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">料理名</th>
+              <th scope="col">料理時間(分)</th>
+              <th scope="col">最終更新時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i, recipe in enumerate(recipes, 1) %}
+            <tr>
+              <th scope="row">{{ i }}</th>
+              <td><a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.title }}</a></td>
+              <td>{{ recipe.cook_time }}</td>
+              <td>{{ format(recipe.updated_at, '%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+</div>
+
+<br><br>
+<a href="{{ url_for('logout') }}" role="button">ログアウト</a>
+{% endblock %}
