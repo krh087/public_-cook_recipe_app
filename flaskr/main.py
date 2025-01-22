@@ -163,3 +163,9 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return redirect('/')
+
+@app.route('/example', methods=['POST','GET'])
+def example():
+    return render_template(
+        'example.html',
+    )
