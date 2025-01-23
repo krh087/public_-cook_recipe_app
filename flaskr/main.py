@@ -169,3 +169,44 @@ def example():
     return render_template(
         'example.html',
     )
+
+@app.route('/upgrade_recipe/<string:recipe_id>', methods=['GET', 'POST'])
+@login_required
+def upgrade_recipe(recipe_id):
+    if request.method == 'GET':
+        recipe = Recipe.query.get(recipe_id)
+        recipe_ingredients = Recipe_ingredient.query.filter_by(recipe_id=recipe_id).all()
+        ingredients = []
+        for recipe_ingredient in recipe_ingredients:
+            ingredient = Ingredient.query.filter_by(id=recipe_ingredient.ingredient_id).one_or_none()
+            ingredients.append(ingredient)
+        recipe_steps = Recipe_step.query.filter_by(recipe_id=recipe_id).all()
+        steps = []
+        for recipe_step in recipe_steps:
+            step = Step.query.filter_by(id=recipe_step.step_id).one_or_none()
+            steps.append(step)
+        print(ingredients)
+        print(steps)
+        return render_template(
+            'upgrade_recipe.html',recipe=recipe,ingredients=ingredients,steps=steps
+        )
+    if request.method == 'POST':
+        recipe = Recipe.query.get(recipe_id)
+        recipe_ingredients = Recipe_ingredient.query.filter_by(recipe_id=recipe_id).all()
+        ingredients = []
+        for recipe_ingredient in recipe_ingredients:
+            ingredient = Ingredient.query.filter_by(id=recipe_ingredient.ingredient_id).one_or_none()
+            ingredients.append(ingredient)
+        upgrade_ingredient_names = request.form.getlist("dynamic_ingredient")
+        upgrade_ingredient_quantities = request.form.getlist("dynamic_quantity")
+        upgrade_step_contents = request.form.getlist("dynamic_instruction")
+        for ingredient, upgrade_ingredient_name in zip(ingredients,upgrade_ingredient_names):
+            print("ingredient.ingredient_name, upgrade_ingredient_name")
+            print(ingredient.ingredient_name, upgrade_ingredient_name)
+        for upgrade_ingredient_quantity in upgrade_ingredient_quantities:
+            print(upgrade_ingredient_quantity)
+        for upgrade_step_content in upgrade_step_contents:
+            print(upgrade_step_content)
+        
+	
+        return redirect('/')
